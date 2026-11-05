@@ -1,0 +1,10 @@
+# Dependencias del servicio (las instala Vercel y también tu PC). Sin PyTorch.
+fastapi>=0.110
+uvicorn>=0.29
+python-multipart>=0.0.9
+sqlalchemy>=2.0
+pyjwt>=2.8
+opencv-python-headless>=4.8,<5
+pillow>=10.0
+numpy>=1.26
+onnxruntime>=1.17

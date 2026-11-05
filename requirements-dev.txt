@@ -1,0 +1,8 @@
+# Desarrollo y pruebas locales
+-r requirements.txt
+uvicorn[standard]>=0.29
+pytest>=8.0
+scikit-image>=0.22
+# Base de datos MySQL (solo con PERSIST=true)
+pymysql>=1.1
+cryptography>=42

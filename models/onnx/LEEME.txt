@@ -1,0 +1,13 @@
+Aquí van los modelos de IA en formato ONNX. Se generan UNA VEZ en tu PC con:
+
+    pip install -r requirements-export.txt
+    python scripts/exportar_onnx.py
+
+Debe quedar:
+    fashionclip_vision.onnx    (~90 MB)
+    fashionclip_textos.npz
+    yolos_fashionpedia.onnx    (~30 MB)
+    meta.json
+
+Súbelos junto con el proyecto (GitHub / Vercel). Sin ellos, la vestimenta y los
+accesorios no se pueden evaluar y todas las fotos serán rechazadas.

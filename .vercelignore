@@ -1,0 +1,11 @@
+venv/
+.venv/
+.env
+storage/
+models/hf/
+frontend/node_modules/
+frontend/dist/
+**/__pycache__/
+.pytest_cache/
+.qodo/
+fotos_prueba/

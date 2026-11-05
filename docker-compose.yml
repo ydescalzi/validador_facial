@@ -1,0 +1,27 @@
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: photo_validator
+      MYSQL_USER: validador
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-cambia-esta-clave}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-cambia-esta-clave-root}
+    volumes: [mysql_data:/var/lib/mysql]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 10
+
+  api:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: mysql+pymysql://validador:${MYSQL_PASSWORD:-cambia-esta-clave}@mysql:3306/photo_validator?charset=utf8mb4
+    volumes: [fotos:/app/storage]
+    ports: ["8080:8080"]
+    depends_on:
+      mysql: { condition: service_healthy }
+
+volumes:
+  mysql_data:
+  fotos:

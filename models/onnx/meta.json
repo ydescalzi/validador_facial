@@ -1,0 +1,109 @@
+{
+ "clip": {
+  "size": 224,
+  "shortest_edge": 224,
+  "mean": [
+   0.48145466,
+   0.4578275,
+   0.40821073
+  ],
+  "std": [
+   0.26862954,
+   0.26130258,
+   0.27577711
+  ],
+  "n_formal": 5,
+  "torso_prompts": [
+   "a person wearing a suit jacket over a dress shirt",
+   "a person wearing a blazer over a collared shirt",
+   "a person wearing a buttoned collared dress shirt",
+   "a person wearing a formal blouse with a collar",
+   "a person wearing a shirt and tie",
+   "a person wearing a crew neck t-shirt",
+   "a person wearing a colored cotton t-shirt",
+   "a person wearing a polo shirt",
+   "a person wearing a hoodie or sweatshirt",
+   "a person wearing a tank top",
+   "a person wearing a sports jersey or tracksuit"
+  ],
+  "face_keys": [
+   "bare",
+   "eyeglasses",
+   "sunglasses",
+   "hat",
+   "headphones",
+   "face_mask"
+  ]
+ },
+ "yolos": {
+  "height": 640,
+  "width": 512,
+  "mean": [
+   0.485,
+   0.456,
+   0.406
+  ],
+  "std": [
+   0.229,
+   0.224,
+   0.225
+  ],
+  "labels": {
+   "0": "shirt, blouse",
+   "1": "top, t-shirt, sweatshirt",
+   "2": "sweater",
+   "3": "cardigan",
+   "4": "jacket",
+   "5": "vest",
+   "6": "pants",
+   "7": "shorts",
+   "8": "skirt",
+   "9": "coat",
+   "10": "dress",
+   "11": "jumpsuit",
+   "12": "cape",
+   "13": "glasses",
+   "14": "hat",
+   "15": "headband, head covering, hair accessory",
+   "16": "tie",
+   "17": "glove",
+   "18": "watch",
+   "19": "belt",
+   "20": "leg warmer",
+   "21": "tights, stockings",
+   "22": "sock",
+   "23": "shoe",
+   "24": "bag, wallet",
+   "25": "scarf",
+   "26": "umbrella",
+   "27": "hood",
+   "28": "collar",
+   "29": "lapel",
+   "30": "epaulette",
+   "31": "sleeve",
+   "32": "pocket",
+   "33": "neckline",
+   "34": "buckle",
+   "35": "zipper",
+   "36": "applique",
+   "37": "bead",
+   "38": "bow",
+   "39": "flower",
+   "40": "fringe",
+   "41": "ribbon",
+   "42": "rivet",
+   "43": "ruffle",
+   "44": "sequin",
+   "45": "tassel"
+  }
+ },
+ "origen": {
+  "clip": "patrickjohncyh/fashion-clip",
+  "yolos": "valentinafeve/yolos-fashionpedia",
+  "cuantizado": true,
+  "prueba": false
+ },
+ "verificacion": {
+  "clip_cosine_vs_torch": 0.9938
+ }
+}

@@ -1,0 +1,4 @@
+Pesos de los modelos.
+
+- face_detection_yunet_2023mar.onnx: YuNet, OpenCV Zoo, licencia MIT (incluido).
+- onnx/: FashionCLIP y YOLOS Fashionpedia en ONNX. Se generan con  python scripts/exportar_onnx.py

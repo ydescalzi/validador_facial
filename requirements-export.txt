@@ -1,0 +1,7 @@
+# Solo para exportar los modelos a ONNX una vez en tu PC:  python scripts/exportar_onnx.py
+-r requirements.txt
+torch>=2.2
+transformers>=4.40
+huggingface_hub>=0.23
+onnx>=1.15
+onnxscript>=0.1
