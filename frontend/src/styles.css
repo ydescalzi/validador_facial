@@ -242,3 +242,101 @@ main.estudiante { max-width: 980px; }
   .foto-evaluada { align-items: flex-start; }
   .foto-evaluada img { width: min(180px, 55%); }
 }
+.modal-dialogo {
+  --marca: #bd1717;
+  --marca-2: #941111;
+  --marca-suave: #fff0ef;
+  --tinta: #29262a;
+  --tinta-2: #625a5e;
+  --fondo: #fbf8f7;
+  --borde: #eadfdd;
+  --radio: 16px;
+  background: var(--fondo);
+}
+.modal-fondo { background: rgba(42, 20, 23, .68); }
+.modal-dialogo > .barra {
+  min-height: 84px;
+  padding: 8px 24px;
+  background: #fff;
+  border-bottom: 1px solid #f0e5e3;
+}
+.modal-dialogo .marca { gap: 14px; }
+.modal-dialogo .marca img { display: block; width: min(225px, 36vw); height: auto; }
+.modal-dialogo .marca > span {
+  padding-left: 14px;
+  border-left: 1px solid var(--borde);
+  color: var(--tinta-2);
+  font-size: .86rem;
+  font-weight: 600;
+}
+.modal-dialogo .barra-sub { color: var(--tinta-2); opacity: 1; font-size: .84rem; }
+.modal-dialogo .modal-cerrar {
+  color: var(--tinta-2);
+  border-color: var(--borde);
+}
+.modal-dialogo .modal-cerrar:hover { background: var(--marca-suave); color: var(--marca); }
+.modal-dialogo main.estudiante { padding-top: 24px; }
+.modal-dialogo .tarjeta { padding: clamp(18px, 3vw, 30px); border-color: #efe7e5; }
+.bienvenida { max-width: 680px; margin-bottom: 22px; }
+.bienvenida-etiqueta {
+  display: inline-block;
+  margin-bottom: 9px;
+  color: var(--marca);
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .09em;
+}
+.modal-dialogo .estudiante h1 { margin-bottom: 7px; color: #2b2022; }
+.bienvenida .sub { margin: 0; font-size: .96rem; }
+.modal-dialogo .pasos { gap: 10px; }
+.modal-dialogo .pasos li { border: 1px solid transparent; }
+.modal-dialogo .pasos li.actual { background: var(--marca-suave); border-color: #f0d1cf; color: var(--marca-2); }
+.modal-dialogo .pasos li.actual span { background: var(--marca); border-color: var(--marca); }
+.modal-dialogo .rejilla { grid-template-columns: minmax(0, 1fr) minmax(0, .92fr); gap: 18px; align-items: start; }
+.modal-dialogo .col-subida {
+  padding: 18px;
+  border: 1px solid #efe7e5;
+  border-radius: 14px;
+  background: linear-gradient(160deg, #fff 45%, #fff8f7);
+}
+.subida-encabezado { display: flex; align-items: center; gap: 11px; margin-bottom: 14px; }
+.subida-icono {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--marca-suave);
+  color: var(--marca);
+  font-size: .76rem;
+  font-weight: 800;
+}
+.subida-encabezado h2 { margin: 0 0 2px; color: #2b2022; font-size: 1.05rem; }
+.subida-encabezado p { margin: 0; color: var(--tinta-2); font-size: .82rem; }
+.modal-dialogo .marco { border-color: #e7d8d6; background: #fff; }
+.modal-dialogo .marco.arrastre { border-color: var(--marca); background: var(--marca-suave); }
+.modal-dialogo .marco.con-foto { background: #251e1f; }
+.modal-dialogo .carga-botones .btn { padding: 9px 10px; font-size: .85rem; }
+.modal-dialogo .btn:not(.sec):not(.ok) { background: var(--marca); }
+.modal-dialogo .btn:not(.sec):not(.ok):hover { background: var(--marca-2); }
+.modal-dialogo .btn.sec { background: #f4efee; }
+.modal-dialogo .btn.sec:hover { background: #eae0de; }
+.modal-dialogo .ficha { border-color: #efcfcd; background: linear-gradient(135deg, #fff1f0, #fff); }
+.modal-dialogo .ficha-cota { color: var(--marca-2); }
+.modal-dialogo .pie { margin-bottom: 18px; }
+.modal-dialogo .foto-evaluada img { object-fit: contain; }
+@media (max-width: 760px) {
+  .modal-dialogo .rejilla { grid-template-columns: 1fr; }
+  .modal-dialogo .col-subida { order: 2; }
+}
+@media (max-width: 520px) {
+  .modal-dialogo > .barra { min-height: 72px; padding: 8px 14px; }
+  .modal-dialogo .marca img { width: min(175px, 42vw); }
+  .modal-dialogo .marca > span { display: none; }
+  .modal-dialogo .modal-barra-acciones { gap: 8px; }
+  .modal-dialogo .barra-sub { display: none; }
+  .modal-dialogo main.estudiante { padding-top: 12px; }
+  .modal-dialogo .tarjeta { padding: 18px 14px; }
+  .modal-dialogo .col-subida { padding: 14px; }
+}

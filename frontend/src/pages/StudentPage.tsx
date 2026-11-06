@@ -93,9 +93,12 @@ export default function StudentPage() {
           <div className="modal-dialogo" role="dialog" aria-modal="true" aria-labelledby="titulo-modal"
                tabIndex={-1} ref={dialogo}>
             <header className="barra">
-              <div className="marca"><span className="logo">{CONFIG.INSTITUCION.charAt(0)}</span>{CONFIG.INSTITUCION}</div>
+              <div className="marca">
+                <img src="/logo-usmp.png" alt="Universidad de San Martín de Porres" />
+                <span>Portal de verificación</span>
+              </div>
               <div className="modal-barra-acciones">
-                <small className="barra-sub">Foto para carné</small>
+                <small className="barra-sub">Estudiantes · Docentes</small>
                 <button className="modal-cerrar" type="button" aria-label="Cerrar verificador"
                         onClick={() => setAbierto(false)}>×</button>
               </div>
@@ -103,8 +106,11 @@ export default function StudentPage() {
 
             <main className="estudiante" ref={arriba}>
               <section className="tarjeta">
-                <h1 id="titulo-modal">{enlace.nombre ? `Hola, ${enlace.nombre}` : "Sube tu foto para el carné"}</h1>
-                <p className="sub">Revisamos tu foto al instante. Si cumple los requisitos, queda aceptada.</p>
+                <div className="bienvenida">
+                  <span className="bienvenida-etiqueta">CARNÉ UNIVERSITARIO · ESTUDIANTES Y DOCENTES</span>
+                  <h1 id="titulo-modal">{enlace.nombre ? `Hola, ${enlace.nombre}` : "Sube tu foto para el carné"}</h1>
+                  <p className="sub">Te acompañamos para que tu fotografía cumpla los requisitos. Súbela y recibe el resultado al instante.</p>
+                </div>
 
                 <ol className="pasos" aria-label="Progreso">
                   {["Requisitos", "Tu foto", "Resultado"].map((t, i) => (
@@ -140,6 +146,13 @@ export default function StudentPage() {
                     </div>
 
                     <div className="col-subida">
+                      <div className="subida-encabezado">
+                        <span className="subida-icono" aria-hidden="true">01</span>
+                        <div>
+                          <h2>Tu fotografía</h2>
+                          <p>Elige una imagen clara, de frente y con buena iluminación.</p>
+                        </div>
+                      </div>
                       <ZonaCarga archivo={archivo} abrirRef={abrir} deshabilitado={paso === "analizando"}
                                  maxMb={carnet?.mode === "validate" ? 5 : 15}
                                  onArchivo={f => { setArchivo(f); setError(""); }} onError={setError} />
@@ -154,7 +167,7 @@ export default function StudentPage() {
                   </div>
                 )}
               </section>
-              <p className="pie">Tu foto se usa solo para verificar los requisitos del carné.</p>
+              <p className="pie">Si tu foto necesita algún ajuste, podrás corregirla y volver a intentarlo.</p>
             </main>
           </div>
         </div>
