@@ -184,7 +184,6 @@ main.estudiante { max-width: 980px; }
 .marco:not(.con-foto) .marco-guia { display: none; }
 .carga-botones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .centro { text-align: center; margin: 0; }
-.codigo-fijo { margin: 14px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--gris-suave); }
 .btn.grande { padding: 15px 18px; font-size: 1.05rem; }
 
 .aviso { text-align: center; border-radius: var(--radio); padding: 24px 18px; border: 1px solid; }
@@ -214,4 +213,32 @@ main.estudiante { max-width: 980px; }
   .estudiante .si-no { order: 1; margin-top: 0; }
   .estudiante .col-subida { order: 2; }
   .estudiante .ficha { order: 3; }
+}
+.modal-fondo { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 24px;
+               background: rgba(15, 23, 42, .62); backdrop-filter: blur(4px); }
+.modal-dialogo { width: min(980px, 100%); max-height: calc(100dvh - 48px); overflow-y: auto; overscroll-behavior: contain;
+                 border-radius: var(--radio); background: var(--fondo); box-shadow: 0 24px 80px rgba(0,0,0,.3); outline: none; }
+.modal-dialogo > .barra { position: sticky; top: 0; z-index: 1; }
+.modal-barra-acciones { display: flex; align-items: center; gap: 16px; }
+.modal-cerrar { width: 34px; height: 34px; border: 1px solid rgba(255,255,255,.4); border-radius: 50%;
+                background: transparent; color: #fff; font: inherit; font-size: 1.5rem; line-height: 1; cursor: pointer; }
+.modal-cerrar:hover { background: rgba(255,255,255,.16); }
+.modal-dialogo main.estudiante { margin: 0 auto; padding-top: 20px; padding-bottom: 4px; }
+.modal-dialogo .tarjeta { box-shadow: none; }
+.modal-dialogo .pie { padding: 0 6px 16px; text-align: center; color: var(--tenue); font-size: .86rem; }
+.verificador-cerrado { min-height: 100dvh; display: grid; place-items: center; margin: 0; }
+.foto-evaluada { display: flex; align-items: center; gap: 20px; margin-top: 18px; padding: 16px;
+                 border: 1px solid var(--borde); border-radius: var(--radio); background: #fff; }
+.foto-evaluada.APPROVED { border-color: #b5e2c3; }
+.foto-evaluada.REJECTED { border-color: #f3c0c0; }
+.foto-evaluada.MANUAL_REVIEW { border-color: #f1d3a6; }
+.foto-evaluada-info { min-width: 130px; }
+.foto-evaluada-info h3 { margin: 0 0 8px; font-size: 1rem; }
+.foto-evaluada img { display: block; width: min(190px, 45%); max-height: 280px; object-fit: contain;
+                     border-radius: 8px; background: var(--gris-suave); }
+@media (max-width: 600px) {
+  .modal-fondo { padding: 0; }
+  .modal-dialogo { max-height: 100dvh; min-height: 100dvh; border-radius: 0; }
+  .foto-evaluada { align-items: flex-start; }
+  .foto-evaluada img { width: min(180px, 55%); }
 }

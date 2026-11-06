@@ -3,7 +3,7 @@ import type { Validacion } from "../api/types";
 
 /**
  * Integración con el sistema que enlaza a esta página.
- *   ?codigo=2026001         código del estudiante (se muestra fijo)
+ *   ?codigo=2026001         código del estudiante (opcional, enviado sin mostrarse)
  *   ?nombre=Ana%20Pérez      nombre a mostrar (opcional)
  *   ?retorno=https://...     adónde volver cuando la foto sea aceptada
  */

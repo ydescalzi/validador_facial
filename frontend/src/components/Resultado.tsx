@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import type { Criterio, Estado, Validacion } from "../api/types";
 import { FotoCarnetLista } from "./FotoCarnetLista";
 
@@ -30,14 +31,26 @@ export function ListaCriterios({ criterios }: { criterios: Criterio[] }) {
 
 interface Props {
   v: Validacion;
+  archivo: File | null;
   onReintentar: () => void;
   onContinuar?: () => void;
 }
 
 /** Resultado para el estudiante: claro y con una sola acción principal. */
-export function Resultado({ v, onReintentar, onContinuar }: Props) {
+export function Resultado({ v, archivo, onReintentar, onContinuar }: Props) {
   const aprobada = v.status === "APPROVED";
   const revision = v.status === "MANUAL_REVIEW";
+  const [fotoUrl, setFotoUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!archivo) {
+      setFotoUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(archivo);
+    setFotoUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [archivo]);
 
   return (
     <div className="resultado activo" aria-live="polite">
@@ -46,6 +59,16 @@ export function Resultado({ v, onReintentar, onContinuar }: Props) {
         <h2>{aprobada ? "¡Tu foto fue aceptada!" : revision ? "Tu foto está en revisión" : "Tu foto fue rechazada"}</h2>
         <p>{v.message}</p>
       </div>
+
+      {fotoUrl && (
+        <section className={`foto-evaluada ${v.status}`} aria-label="Fotografía evaluada">
+          <div className="foto-evaluada-info">
+            <h3>Foto evaluada</h3>
+            <span className={`chip ${v.status}`}>{aprobada ? "Aceptada" : revision ? "En revisión" : "Rechazada"}</span>
+          </div>
+          <img src={fotoUrl} alt={`Fotografía ${aprobada ? "aceptada" : revision ? "en revisión" : "rechazada"}`} />
+        </section>
+      )}
 
       {aprobada && <FotoCarnetLista v={v} />}
 

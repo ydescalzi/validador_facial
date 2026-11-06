@@ -9,7 +9,6 @@ import { ZonaCarga } from "../components/ZonaCarga";
 import { leerParametros, notificarResultado, urlRetorno } from "../utils/enlace";
 import { reducirFoto } from "../utils/imagen";
 
-const CODIGO = /^[A-Za-z0-9_.-]{1,50}$/;
 type Paso = "subir" | "analizando" | "resultado";
 
 const SI = ["Fondo blanco y liso", "Saco, blazer, camisa o blusa formal", "De frente, mirando a la cámara", "De los hombros hacia arriba"];
@@ -19,13 +18,15 @@ export default function StudentPage() {
   const enlace = useMemo(leerParametros, []);
   const [paso, setPaso] = useState<Paso>("subir");
   const [archivo, setArchivo] = useState<File | null>(null);
-  const [codigo, setCodigo] = useState(enlace.codigo);
   const [error, setError] = useState("");
   const [resultado, setResultado] = useState<Validacion | null>(null);
   const [carnet, setCarnet] = useState<ReglasCarnet | null>(null);
   const [disponible, setDisponible] = useState(true);
+  const [abierto, setAbierto] = useState(true);
   const abrir = useRef<(() => void) | null>(null);
   const arriba = useRef<HTMLDivElement>(null);
+  const dialogo = useRef<HTMLDivElement>(null);
+  const botonAbrir = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     api.reglas()
@@ -36,17 +37,34 @@ export default function StudentPage() {
       .catch(() => setDisponible(false));
   }, []);
 
+  useEffect(() => {
+    if (!abierto) return;
+    const anterior = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    dialogo.current?.focus();
+    const cerrarConEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setAbierto(false);
+    };
+    window.addEventListener("keydown", cerrarConEscape);
+    return () => {
+      document.body.style.overflow = anterior;
+      window.removeEventListener("keydown", cerrarConEscape);
+    };
+  }, [abierto]);
+
+  useEffect(() => {
+    if (!abierto) botonAbrir.current?.focus();
+  }, [abierto]);
+
   async function validar() {
     if (!archivo) return;
-    const cod = codigo.trim();
-    if (cod && !CODIGO.test(cod)) { setError("Código de estudiante inválido."); return; }
     setError(""); setPaso("analizando");
     arriba.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     try {
       // En modo "generar" se reduce en el navegador (subida rápida desde el celular);
       // en modo "validar" el archivo se envía intacto para medir sus píxeles, peso y ppp.
       const foto = carnet?.mode === "validate" ? archivo : await reducirFoto(archivo, CONFIG.MAX_LADO_SUBIDA);
-      const v = await api.validar(foto, cod || undefined);
+      const v = await api.validar(foto, enlace.codigo || undefined);
       setResultado(v);
       setPaso("resultado");
       notificarResultado(v, enlace.retorno);
@@ -70,76 +88,83 @@ export default function StudentPage() {
 
   return (
     <>
-      <header className="barra">
-        <div className="marca"><span className="logo">{CONFIG.INSTITUCION.charAt(0)}</span>{CONFIG.INSTITUCION}</div>
-        <small className="barra-sub">Foto para carné</small>
-      </header>
-
-      <main className="estudiante" ref={arriba}>
-        <section className="tarjeta">
-          <h1>{enlace.nombre ? `Hola, ${enlace.nombre}` : "Sube tu foto para el carné"}</h1>
-          <p className="sub">Revisamos tu foto al instante. Si cumple los requisitos, queda aceptada.</p>
-
-          <ol className="pasos" aria-label="Progreso">
-            {["Requisitos", "Tu foto", "Resultado"].map((t, i) => (
-              <li key={t} className={i + 1 < pasoN ? "hecho" : i + 1 === pasoN ? "actual" : ""}>
-                <span>{i + 1 < pasoN ? "✓" : i + 1}</span>{t}
-              </li>
-            ))}
-          </ol>
-
-          {!disponible && (
-            <div className="caja motivos" role="alert">
-              <h4>Servicio no disponible</h4>
-              <p style={{ margin: 0 }}>No pudimos conectar con el validador. Inténtalo en unos minutos.</p>
-            </div>
-          )}
-
-          {paso === "resultado" && resultado ? (
-            <Resultado v={resultado} onReintentar={reintentar} onContinuar={continuar} />
-          ) : (
-            <div className="rejilla">
-              <div className="col-requisitos">
-                {carnet && <FichaCarnet r={carnet} />}
-                <div className="si-no">
-                  <div className="si">
-                    <h3>Sí</h3>
-                    <ul>{SI.map(x => <li key={x}>{x}</li>)}</ul>
-                  </div>
-                  <div className="no">
-                    <h3>No</h3>
-                    <ul>{NO.map(x => <li key={x}>{x}</li>)}</ul>
-                  </div>
-                </div>
+      {abierto ? (
+        <div className="modal-fondo">
+          <div className="modal-dialogo" role="dialog" aria-modal="true" aria-labelledby="titulo-modal"
+               tabIndex={-1} ref={dialogo}>
+            <header className="barra">
+              <div className="marca"><span className="logo">{CONFIG.INSTITUCION.charAt(0)}</span>{CONFIG.INSTITUCION}</div>
+              <div className="modal-barra-acciones">
+                <small className="barra-sub">Foto para carné</small>
+                <button className="modal-cerrar" type="button" aria-label="Cerrar verificador"
+                        onClick={() => setAbierto(false)}>×</button>
               </div>
+            </header>
 
-              <div className="col-subida">
-                <ZonaCarga archivo={archivo} abrirRef={abrir} deshabilitado={paso === "analizando"}
-                           maxMb={carnet?.mode === "validate" ? 5 : 15}
-                           onArchivo={f => { setArchivo(f); setError(""); }} onError={setError} />
+            <main className="estudiante" ref={arriba}>
+              <section className="tarjeta">
+                <h1 id="titulo-modal">{enlace.nombre ? `Hola, ${enlace.nombre}` : "Sube tu foto para el carné"}</h1>
+                <p className="sub">Revisamos tu foto al instante. Si cumple los requisitos, queda aceptada.</p>
 
-                {enlace.codigo ? (
-                  <p className="codigo-fijo">Código de estudiante: <b>{enlace.codigo}</b></p>
-                ) : (
-                  <>
-                    <label className="campo" htmlFor="codigo">Código de estudiante</label>
-                    <input id="codigo" type="text" inputMode="numeric" maxLength={50} autoComplete="off"
-                           placeholder="Ej. 2026001234" value={codigo} onChange={e => setCodigo(e.target.value)} />
-                  </>
+                <ol className="pasos" aria-label="Progreso">
+                  {["Requisitos", "Tu foto", "Resultado"].map((t, i) => (
+                    <li key={t} className={i + 1 < pasoN ? "hecho" : i + 1 === pasoN ? "actual" : ""}>
+                      <span>{i + 1 < pasoN ? "✓" : i + 1}</span>{t}
+                    </li>
+                  ))}
+                </ol>
+
+                {!disponible && (
+                  <div className="caja motivos" role="alert">
+                    <h4>Servicio no disponible</h4>
+                    <p style={{ margin: 0 }}>No pudimos conectar con el validador. Inténtalo en unos minutos.</p>
+                  </div>
                 )}
 
-                <button className="btn bloque grande" disabled={!archivo || paso === "analizando" || !disponible}
-                        onClick={validar}>
-                  {paso === "analizando" ? "Revisando tu foto…" : "Validar mi foto"}
-                </button>
-                <PasosAnalisis activo={paso === "analizando"} />
-                {error && <div className="error" role="alert">{error}</div>}
-              </div>
-            </div>
-          )}
-        </section>
-        <p className="pie">Tu foto se usa solo para verificar los requisitos del carné.</p>
-      </main>
+                {paso === "resultado" && resultado ? (
+                  <Resultado v={resultado} archivo={archivo} onReintentar={reintentar} onContinuar={continuar} />
+                ) : (
+                  <div className="rejilla">
+                    <div className="col-requisitos">
+                      {carnet && <FichaCarnet r={carnet} />}
+                      <div className="si-no">
+                        <div className="si">
+                          <h3>Sí</h3>
+                          <ul>{SI.map(x => <li key={x}>{x}</li>)}</ul>
+                        </div>
+                        <div className="no">
+                          <h3>No</h3>
+                          <ul>{NO.map(x => <li key={x}>{x}</li>)}</ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-subida">
+                      <ZonaCarga archivo={archivo} abrirRef={abrir} deshabilitado={paso === "analizando"}
+                                 maxMb={carnet?.mode === "validate" ? 5 : 15}
+                                 onArchivo={f => { setArchivo(f); setError(""); }} onError={setError} />
+
+                      <button className="btn bloque grande" disabled={!archivo || paso === "analizando" || !disponible}
+                              onClick={validar}>
+                        {paso === "analizando" ? "Revisando tu foto…" : "Validar mi foto"}
+                      </button>
+                      <PasosAnalisis activo={paso === "analizando"} />
+                      {error && <div className="error" role="alert">{error}</div>}
+                    </div>
+                  </div>
+                )}
+              </section>
+              <p className="pie">Tu foto se usa solo para verificar los requisitos del carné.</p>
+            </main>
+          </div>
+        </div>
+      ) : (
+        <main className="verificador-cerrado">
+          <button ref={botonAbrir} className="btn grande" type="button" onClick={() => setAbierto(true)}>
+            Abrir verificador de fotos
+          </button>
+        </main>
+      )}
     </>
   );
 }
